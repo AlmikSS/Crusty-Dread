@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Core.ServiceLocatorDI;
 using UnityEngine;
 
 namespace Core.TicksSystem
 {
-    public class TickSystem : MonoBehaviour
+    public class TickSystem : MonoBehaviour, IService
     {
         [SerializeField] private int _ticksPerSecond = 60;
 
@@ -18,7 +19,7 @@ namespace Core.TicksSystem
 
         public void Construct()
         {
-            //TODO register to Service locator
+            ServiceLocator.Register(this);
             
             _tickInterval = 1f / _ticksPerSecond;
             _accumulator = 0f;
