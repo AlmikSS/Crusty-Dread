@@ -16,6 +16,7 @@ namespace Core.TicksSystem
         private float _tickInterval;
         private float _accumulator;
         private bool _isConstruct;
+        private bool _isTicksStarted;
 
         public void Construct()
         {
@@ -32,6 +33,16 @@ namespace Core.TicksSystem
             _isConstruct = true;
         }
 
+        public void StartTicks()
+        {
+            if (!_isConstruct)
+                return;
+
+            _isTicksStarted = true;
+        }
+        
+        public void StopTicks() => _isTicksStarted = false;
+        
         public void Register(ITickable tickable) => _registerQueue.Enqueue(tickable);
         public void Unregister(ITickable tickable) => _unregisterQueue.Enqueue(tickable);
         
@@ -54,7 +65,14 @@ namespace Core.TicksSystem
             {
                 foreach (var tickable in tickables)
                 {
-                    tickable?.OnTick(deltaTime);
+                    if (tickable.Phase is TickPhase.InputPhase or TickPhase.SystemPhase)
+                    {
+                        tickable.OnTick(deltaTime);
+                        continue;
+                    }
+                    
+                    if (_isTicksStarted)
+                        tickable.OnTick(deltaTime);
                 }
             }
             

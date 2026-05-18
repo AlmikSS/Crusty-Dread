@@ -1,4 +1,5 @@
-﻿using Core.ServiceLocatorDI;
+﻿using System;
+using Core.ServiceLocatorDI;
 using Core.TicksSystem;
 using UnityEngine;
 
@@ -17,7 +18,9 @@ namespace Core.Input
         public void Construct()
         {
             ServiceLocator.Register(this);
+            ServiceLocator.Get<TickSystem>().Register(this);
             _inputActions = new InputActions();
+            _inputActions.Enable();
             _isConstruct = true;
         }
         
@@ -42,15 +45,12 @@ namespace Core.Input
             if (_inputActions.Player.Interact.WasPressedThisFrame())
                 _isUseInput = true;
         }
-        
-        private void OnEnable()
-        {
-            _inputActions.Enable();
-        }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
+            _isConstruct = false;
             _inputActions.Disable();
+            ServiceLocator.Get<TickSystem>().Unregister(this);
         }
     }
 }
