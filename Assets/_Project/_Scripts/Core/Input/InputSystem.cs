@@ -52,10 +52,6 @@ namespace Core.Input
         
         public void OnTick(float deltaTime)
         {
-            _useInput = false;
-            _openConsole = false;
-            _jumpInput = false;
-
             _snapshot = new InputSnapshot(
                 _context,
                 _currentMoveInput,
@@ -63,6 +59,10 @@ namespace Core.Input
                 _useInput,
                 _openConsole,
                 _jumpInput);
+            
+            _useInput = false;
+            _openConsole = false;
+            _jumpInput = false;
         }
 
         private void Update()
@@ -81,14 +81,6 @@ namespace Core.Input
 
             _currentMoveInput = _inputActions.Player.Move.ReadValue<Vector2>();
             _currentLookInput = _inputActions.Player.Look.ReadValue<Vector2>();
-
-            _snapshot = new InputSnapshot(
-                _context,
-                _currentMoveInput,
-                _currentLookInput,
-                _useInput,
-                _openConsole,
-                _jumpInput);
         }
 
         private void OnDestroy()

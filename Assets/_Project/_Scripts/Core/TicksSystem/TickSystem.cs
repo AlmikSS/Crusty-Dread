@@ -1,9 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Core.ServiceLocatorDI;
 using Tools.DevConsole;
 using TriInspector;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace Core.TicksSystem
 {
@@ -19,6 +21,13 @@ namespace Core.TicksSystem
         private float _accumulator;
         private bool _isConstruct;
         private bool _isTicksStarted;
+        private int _tickCounter;
+        private float _tickTimer;
+        private Stopwatch _stopwatch = new Stopwatch();
+        
+        public int TargetTickRate => _ticksPerSecond;
+        public int RealTickRate { get; private set; }
+        public float TickExecutionTimeMs { get; private set; }
 
         public void Construct()
         {
@@ -57,10 +66,25 @@ namespace Core.TicksSystem
             if (!_isConstruct)
                 return;
             
+            _tickTimer += Time.unscaledDeltaTime;
+            if (_tickTimer >= 1f)
+            {
+                RealTickRate = _tickCounter;
+                _tickCounter = 0;
+                _tickTimer -= 1f;
+            }
+
             _accumulator += Time.deltaTime;
             while (_accumulator >= _tickInterval)
             {
+                _stopwatch.Restart();
+                
                 Tick(_tickInterval);
+                _tickCounter++;
+                
+                _stopwatch.Stop();
+                TickExecutionTimeMs = (float)_stopwatch.Elapsed.TotalMilliseconds;
+                
                 _accumulator -= _tickInterval;
             }
         }
