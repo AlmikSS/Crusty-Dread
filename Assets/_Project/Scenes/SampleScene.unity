@@ -326,6 +326,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GamePlay.Player.PlayerMovement
   _orientationTransform: {fileID: 1358442085}
   _walkSpeed: 8
+  _acceleration: 3
   _gravityScale: -9.81
 --- !u!143 &311540354
 CharacterController:

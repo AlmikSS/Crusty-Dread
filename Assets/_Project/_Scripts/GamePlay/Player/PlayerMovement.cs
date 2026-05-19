@@ -10,11 +10,13 @@ namespace GamePlay.Player
     {
         [SerializeField] private Transform _orientationTransform;
         [SerializeField] private float _walkSpeed;
+        [SerializeField] private float _acceleration;
         [SerializeField] private float _gravityScale; 
         
         private CharacterController _cc;
         private InputSystem _inputSystem;
-        private Vector3 _moveDirection;
+        private Vector3 _horizontalVelocity;
+        private float _verticalVelocity;
         
         public TickPhase Phase => TickPhase.MainPhase;
 
@@ -36,15 +38,20 @@ namespace GamePlay.Player
                 return;
 
             var moveInput = _inputSystem.Snapshot.MoveInput;
-            var direction = _orientationTransform.TransformDirection(new Vector3(moveInput.x, 0, moveInput.y));
-            _moveDirection = Vector3.Lerp(_moveDirection, direction, deltaTime * _walkSpeed);
+            var input = new Vector3(moveInput.x, 0, moveInput.y);
+            input = Vector3.ClampMagnitude(input, 1f);
+
+            var worldDirection = _orientationTransform.TransformDirection(input);
+            var targetVelocity = worldDirection * _walkSpeed;
+            _horizontalVelocity = Vector3.Lerp(_horizontalVelocity, targetVelocity, _acceleration * deltaTime);
 
             if (_cc.isGrounded)
-                _moveDirection.y = -2f;
+                _verticalVelocity = -2f;
             else
-                _moveDirection.y += _gravityScale * deltaTime;
+                _verticalVelocity += _gravityScale * deltaTime;
             
-            _cc.Move(_moveDirection * _walkSpeed * deltaTime);
+            var finalVelocity = _horizontalVelocity + Vector3.up * _verticalVelocity;
+            _cc.Move(finalVelocity * deltaTime);
         }
     }
 }
