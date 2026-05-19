@@ -19,6 +19,7 @@ namespace GamePlay.Player
         private float _verticalVelocity;
         
         public TickPhase Phase => TickPhase.MainPhase;
+        public Vector3 Velocity => _horizontalVelocity;
 
         private void Start()
         {
