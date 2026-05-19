@@ -27,15 +27,19 @@ namespace Tools.DevConsole
         private int _currentCommandIndex = -1;
         private string _currentInputBuffer;
         
+        public bool IsOpened { get; private set; }
+        
         public void Open()
         {
             _root.SetActive(true);
             _inputField.ActivateInputField();
+            IsOpened = true;
         }
 
         public void Close()
         {
             _root.SetActive(false);
+            IsOpened = false;
         }
 
         private void Start()

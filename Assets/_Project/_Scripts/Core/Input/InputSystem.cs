@@ -30,6 +30,8 @@ namespace Core.Input
         {
             _uiOpenedCount++;
             _context = InputContext.UI;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
 
         public void CloseUI()
@@ -41,6 +43,8 @@ namespace Core.Input
 
             _context = InputContext.GamePlay;
             _uiOpenedCount = 0;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
         
         public void OnTick(float deltaTime)
@@ -65,7 +69,16 @@ namespace Core.Input
                 return;
             
             if (_inputActions.Player.Interact.WasPressedThisFrame())
+            {
+                Debug.Log("Interact");
                 _useInput = true;
+            }
+
+            if (_inputActions.Player.OpenConsole.WasPressedThisFrame())
+            {
+                Debug.Log("OpenConsole");
+                _openConsole = true;
+            }
         }
 
         private void OnDestroy()

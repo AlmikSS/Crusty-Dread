@@ -54,7 +54,7 @@ namespace GamePlay.Player
         
         public void OnTick(float deltaTime)
         {
-            if (_inputSystem == null)
+            if (_inputSystem == null || _inputSystem.Snapshot.Context != InputContext.GamePlay)
                 return;
             
             var lookInput = _inputSystem.Snapshot.LookInput;
