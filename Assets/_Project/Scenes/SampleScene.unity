@@ -185,7 +185,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8664b22fd69a407ea855d09f641d90ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Core.TicksSystem.TickSystem
-  _ticksPerSecond: 120
+  _ticksPerSecond: 100
 --- !u!4 &123683260
 Transform:
   m_ObjectHideFlags: 0
@@ -650,7 +650,7 @@ MonoBehaviour:
   _orientationTransform: {fileID: 1358442085}
   _lookRoot: {fileID: 1861299530}
   _effectsRoot: {fileID: 1317616231}
-  _sensitivity: 30
+  _sensitivity: 20
   _xRotationClamp: 80
   _movementVelocityStopThreshold: 0.3
   _bobAmplitudeX: 0.01
