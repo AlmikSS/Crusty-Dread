@@ -33,7 +33,7 @@ namespace GamePlay.Tools
             var snapshot = _inputSystem.Snapshot;
             if (snapshot.OpenConsole)
             {
-                if (_devConsoleUI.IsOpened)
+                if (!_devConsoleUI.IsOpened)
                     Open();
                 else
                     Close();

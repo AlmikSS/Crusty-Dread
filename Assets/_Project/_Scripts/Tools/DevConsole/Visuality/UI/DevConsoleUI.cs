@@ -104,7 +104,7 @@ namespace Tools.DevConsole
 
             if (_logContent.childCount > _logHistoryLimit)
             {
-                Destroy(_logContent.GetChild(0));
+                Destroy(_logContent.GetChild(0).gameObject);
             }
 
             var color = newLog.Type switch
@@ -194,6 +194,15 @@ namespace Tools.DevConsole
             }
 
             return sb.ToString();
+        }
+
+        [Command("help", "Shows all commands")]
+        private void HelpCommand()
+        {
+            foreach (var command in CommandsRegistry.Commands.Values)
+            {
+                Debug.Log($"'{command.Name}': {command.Description}'");
+            }
         }
     }
 }

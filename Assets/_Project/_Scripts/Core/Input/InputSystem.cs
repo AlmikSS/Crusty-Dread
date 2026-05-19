@@ -70,13 +70,11 @@ namespace Core.Input
             
             if (_inputActions.Player.Interact.WasPressedThisFrame())
             {
-                Debug.Log("Interact");
                 _useInput = true;
             }
 
             if (_inputActions.Player.OpenConsole.WasPressedThisFrame())
             {
-                Debug.Log("OpenConsole");
                 _openConsole = true;
             }
         }

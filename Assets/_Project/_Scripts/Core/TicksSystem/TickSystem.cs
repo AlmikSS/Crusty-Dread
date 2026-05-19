@@ -39,9 +39,14 @@ namespace Core.TicksSystem
                 return;
 
             _isTicksStarted = true;
+            Debug.Log("Ticks started");
         }
         
-        public void StopTicks() => _isTicksStarted = false;
+        public void StopTicks()
+        {
+            _isTicksStarted = false;
+            Debug.Log("Ticks stopped");
+        }
         
         public void Register(ITickable tickable) => _registerQueue.Enqueue(tickable);
         public void Unregister(ITickable tickable) => _unregisterQueue.Enqueue(tickable);
@@ -91,6 +96,7 @@ namespace Core.TicksSystem
                     continue;
                 
                 _tickables[phase].Add(newTickable);
+                Debug.Log($"Registered tickable {newTickable.GetType().Name}");
             }
         }
 
@@ -105,6 +111,7 @@ namespace Core.TicksSystem
                     continue;
                 
                 _tickables[phase].Remove(tickable);
+                Debug.Log($"Unregistered tickable {tickable.GetType().Name}");
             }
         }
     }
