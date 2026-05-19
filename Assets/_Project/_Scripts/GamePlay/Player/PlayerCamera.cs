@@ -1,4 +1,4 @@
-﻿using Core.Input;
+using Core.Input;
 using Core.ServiceLocatorDI;
 using Core.TicksSystem;
 using Tools.DevConsole;
@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace GamePlay.Player
 {
-    public class PlayerCamera : MonoBehaviour, ITickable
+    public class PlayerCamera : MonoBehaviour
     {
         [Title("Dependencies")]
         [SerializeField] private PlayerMovement _playerMovement;
@@ -37,29 +37,22 @@ namespace GamePlay.Player
         private float _bobCycle;
         private float _currentMovementTilt;
         
-        public TickPhase Phase => TickPhase.PostPhase;
-
         private void Start()
         {
             _inputSystem = ServiceLocator.Get<InputSystem>();
-            ServiceLocator.Get<TickSystem>().Register(this);
 
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
-
-        private void OnDestroy()
-        {
-            ServiceLocator.Get<TickSystem>().Unregister(this);
-        }
         
-        public void OnTick(float deltaTime)
+        private void LateUpdate()
         {
             if (_inputSystem == null || _inputSystem.Snapshot.Context != InputContext.GamePlay)
                 return;
             
+            float deltaTime = Time.deltaTime;
             var lookInput = _inputSystem.Snapshot.LookInput;
-            CalculateBaseMouseLook(deltaTime, lookInput);
+            CalculateBaseMouseLook(lookInput);
             CalculateCameraBob(deltaTime);
             CalculateMovementTilt(deltaTime);
             
@@ -72,10 +65,10 @@ namespace GamePlay.Player
             _effectsRoot.localPosition = effectsPosition;
         }
 
-        private void CalculateBaseMouseLook(float deltaTime, Vector2 lookInput)
+        private void CalculateBaseMouseLook(Vector2 lookInput)
         {
-            var x = lookInput.x * _sensitivity * deltaTime;
-            var y = lookInput.y * _sensitivity * deltaTime;
+            var x = lookInput.x * _sensitivity * 0.01f;
+            var y = lookInput.y * _sensitivity * 0.01f;
             
             _lookRotation.x = Mathf.Clamp(_lookRotation.x - y, -_xRotationClamp, _xRotationClamp);
             _lookRotation.y += x;

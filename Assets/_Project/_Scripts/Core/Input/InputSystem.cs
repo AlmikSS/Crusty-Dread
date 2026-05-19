@@ -1,4 +1,4 @@
-﻿using Core.ServiceLocatorDI;
+using Core.ServiceLocatorDI;
 using Core.TicksSystem;
 using UnityEngine;
 
@@ -14,7 +14,8 @@ namespace Core.Input
         private bool _openConsole;
         private bool _jumpInput;
         private int _uiOpenedCount;
-        
+        private Vector2 _currentMoveInput;
+        private Vector2 _currentLookInput;
         
         public TickPhase Phase => TickPhase.InputPhase;
         public InputSnapshot Snapshot => _snapshot;
@@ -51,20 +52,17 @@ namespace Core.Input
         
         public void OnTick(float deltaTime)
         {
-            var moveInput = _inputActions.Player.Move.ReadValue<Vector2>();
-            var lookInput = _inputActions.Player.Look.ReadValue<Vector2>();
-
-            _snapshot = new InputSnapshot(
-                _context,
-                moveInput,
-                lookInput,
-                _useInput,
-                _openConsole,
-                _jumpInput);
-            
             _useInput = false;
             _openConsole = false;
             _jumpInput = false;
+
+            _snapshot = new InputSnapshot(
+                _context,
+                _currentMoveInput,
+                _currentLookInput,
+                _useInput,
+                _openConsole,
+                _jumpInput);
         }
 
         private void Update()
@@ -80,6 +78,17 @@ namespace Core.Input
 
             if (_inputActions.Player.Jump.WasPressedThisFrame())
                 _jumpInput = true;
+
+            _currentMoveInput = _inputActions.Player.Move.ReadValue<Vector2>();
+            _currentLookInput = _inputActions.Player.Look.ReadValue<Vector2>();
+
+            _snapshot = new InputSnapshot(
+                _context,
+                _currentMoveInput,
+                _currentLookInput,
+                _useInput,
+                _openConsole,
+                _jumpInput);
         }
 
         private void OnDestroy()
