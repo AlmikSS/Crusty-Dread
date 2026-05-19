@@ -9,7 +9,7 @@ namespace Core.EntryPoints
         [SerializeField] private TickSystem _tickSystem;
         [SerializeField] private InputSystem _inputSystem;
         
-        private void Start()
+        private void Awake()
         {
             _tickSystem.Construct();
             _inputSystem.Construct();
