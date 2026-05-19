@@ -27,5 +27,15 @@ namespace Core.EntryPoints
             Debug.Log("Restart");
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
+
+        [Command("enable_debug_mode", "Enable global debug hud with input and player input, jump")]
+        private void EnableDebugMode(bool enable)
+        {
+            var en = enable ? "true" : "false";
+            CommandExecutor.Execute("toggle_debug_hud " + en);
+            CommandExecutor.Execute("show_input_info " + en);
+            CommandExecutor.Execute("show_player_info " + en);
+            CommandExecutor.Execute("set_jump_enable " + en);
+        }
     }
 }

@@ -1147,7 +1147,7 @@ GameObject:
   - component: {fileID: 311540356}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1250,8 +1250,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GamePlay.Player.FreeCam
   _componentsToDisable:
-  - {fileID: 311540355}
   - {fileID: 311540353}
+  - {fileID: 311540355}
   _cameraTransform: {fileID: 330585546}
   _moveSpeed: 10
   _lookSensitivity: 0.1

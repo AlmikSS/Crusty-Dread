@@ -18,11 +18,14 @@ namespace GamePlay.Player
         
         private CharacterController _cc;
         private InputSystem _inputSystem;
-        private Vector3 _horizontalVelocity;
+        private Vector3 _horizontalHorizontalVelocity;
         private float _verticalVelocity;
         
         public TickPhase Phase => TickPhase.MainPhase;
-        public Vector3 Velocity => _horizontalVelocity;
+        public Vector3 HorizontalVelocity => _horizontalHorizontalVelocity;
+        public float VerticalVelocity => _verticalVelocity;
+        public bool IsGrounded => _cc.isGrounded;
+        public bool JumpsEnabled => _jumpsEnabled;
 
         private void Start()
         {
@@ -38,7 +41,7 @@ namespace GamePlay.Player
         
         public void OnTick(float deltaTime)
         {
-            if (_inputSystem == null || _inputSystem.Snapshot.Context != InputContext.GamePlay)
+            if (_inputSystem == null || _inputSystem.Snapshot.Context != InputContext.GamePlay || !enabled)
                 return;
 
             var snapshot = _inputSystem.Snapshot;
@@ -49,7 +52,7 @@ namespace GamePlay.Player
 
             var worldDirection = _orientationTransform.TransformDirection(input);
             var targetVelocity = worldDirection * _walkSpeed;
-            _horizontalVelocity = Vector3.Lerp(_horizontalVelocity, targetVelocity, _acceleration * deltaTime);
+            _horizontalHorizontalVelocity = Vector3.Lerp(_horizontalHorizontalVelocity, targetVelocity, _acceleration * deltaTime);
 
             if (_cc.isGrounded)
                 _verticalVelocity = -2f;
@@ -59,7 +62,7 @@ namespace GamePlay.Player
             if (snapshot.JumpInput)
                 Jump();
             
-            var finalVelocity = _horizontalVelocity + Vector3.up * _verticalVelocity;
+            var finalVelocity = _horizontalHorizontalVelocity + Vector3.up * _verticalVelocity;
             _cc.Move(finalVelocity * deltaTime);
         }
 

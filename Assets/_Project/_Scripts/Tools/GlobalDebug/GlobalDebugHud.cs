@@ -2,6 +2,7 @@
 using Core.Input;
 using Core.ServiceLocatorDI;
 using Core.TicksSystem;
+using GamePlay.Player;
 using TMPro;
 using Tools.DevConsole;
 using UnityEngine;
@@ -16,6 +17,11 @@ namespace Tools.GlobalDebug
 
         private TickSystem _tickSystem;
         private InputSystem _inputSystem;
+        private Transform _playerTransform;
+        private PlayerMovement _playerMovement;
+        private PlayerCamera _playerCamera;
+        private bool _showPlayerInfo;
+        private bool _showInputInfo;
         
         private StringBuilder _sb = new();
         private float _updateTimer;
@@ -29,6 +35,12 @@ namespace Tools.GlobalDebug
         {
             _tickSystem = ServiceLocator.Get<TickSystem>();
             _inputSystem = ServiceLocator.Get<InputSystem>();
+            _playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+            if (_playerTransform != null)
+            {
+                _playerMovement = _playerTransform.GetComponent<PlayerMovement>();
+                _playerCamera = _playerTransform.GetComponent<PlayerCamera>();
+            }
 
             if (_panelRoot != null)
                 _panelRoot.SetActive(false);
@@ -68,7 +80,7 @@ namespace Tools.GlobalDebug
             var frameTimeMs = Time.unscaledDeltaTime * 1000f;
             var allocatedMemoryMB = System.GC.GetTotalMemory(false) / 1048576f;
 
-            _sb.AppendLine("<color=yellow>--- TECHNICAL ---</color>");
+            _sb.AppendLine("<color=green>--- TECHNICAL ---</color>");
             _sb.AppendLine($"FPS: {_currentFPS} ({frameTimeMs:F1} ms)");
             _sb.AppendLine($"Memory: {allocatedMemoryMB:F1} MB");
             _sb.AppendLine();
@@ -86,19 +98,43 @@ namespace Tools.GlobalDebug
             }
             _sb.AppendLine();
 
-            _sb.AppendLine("<color=blue>--- INPUT ---</color>");
-            if (_inputSystem != null)
+            if (_showInputInfo)
             {
-                var snap = _inputSystem.Snapshot;
-                _sb.AppendLine($"Context: {snap.Context}");
-                _sb.AppendLine($"Move Input: [X: {snap.MoveInput.x:F1}, Y: {snap.MoveInput.y:F1}]");
-                _sb.AppendLine($"Look Input: [X: {snap.LookInput.x:F1}, Y: {snap.LookInput.y:F1}]");
-            }
-            else
-            {
-                _sb.AppendLine("InputSystem not found.");
+                _sb.AppendLine("<color=green>--- INPUT ---</color>");
+                if (_inputSystem != null)
+                {
+                    var snap = _inputSystem.Snapshot;
+                    _sb.AppendLine($"Context: {snap.Context}");
+                    _sb.AppendLine($"Move Input: [X: {snap.MoveInput.x:F1}, Y: {snap.MoveInput.y:F1}]");
+                    _sb.AppendLine($"Look Input: [X: {snap.LookInput.x:F1}, Y: {snap.LookInput.y:F1}]");
+                }
+                else
+                {
+                    _sb.AppendLine("InputSystem not found.");
+                }
+
+                _sb.AppendLine();
             }
 
+            if (_showPlayerInfo)
+            {
+                _sb.AppendLine("<color=green>--- PLAYER ---</color>");
+
+                if (_playerTransform == null)
+                    _sb.AppendLine("Player not found.");
+                else
+                {
+                    var position = _playerTransform.position;
+                    _sb.AppendLine($"Position: [X: {position.x:F3}, Y: {position.y:F3}, Z: {position.z:F3}]");
+                    _sb.AppendLine($"Look rotation: [X: {_playerCamera.LookRotation.x:F3}, Y: {_playerCamera.LookRotation.y:F3}]");
+                    _sb.AppendLine($"Horizontal velocity: [X: {_playerMovement.HorizontalVelocity.x:F3}, Z: {_playerMovement.HorizontalVelocity.z:F3}]");
+                    _sb.AppendLine($"Vertical velocity: {_playerMovement.VerticalVelocity:F3}");
+                    _sb.AppendLine($"IsGrounded: {_playerMovement.IsGrounded}");
+                    _sb.AppendLine($"JumpEnabled: {_playerMovement.JumpsEnabled}");
+                }
+                _sb.AppendLine();
+            }
+            
             _debugText.text = _sb.ToString();
         }
 
@@ -115,6 +151,20 @@ namespace Tools.GlobalDebug
                 _debugText.enabled = _isVisible;
             }
             Debug.Log($"Debug HUD {(_isVisible ? "Enabled" : "Disabled")}");
+        }
+
+        [Command("show_player_info", "Shows the player information on global debug hud")]
+        private void TogglePlayerInfoDebug(bool enable)
+        {
+            _showPlayerInfo = enable;
+            Debug.Log($"Player Info {(_showPlayerInfo ? "Enabled" : "Disabled")}");
+        }
+        
+        [Command("show_input_info", "Shows the Input information on global debug hud")]
+        private void ToggleInputInfoDebug(bool enable)
+        {
+            _showInputInfo = enable;
+            Debug.Log($"Input Info {(_showPlayerInfo ? "Enabled" : "Disabled")}");
         }
     }
 }

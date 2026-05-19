@@ -36,7 +36,9 @@ namespace GamePlay.Player
         private Vector3 _bobPosition;
         private float _bobCycle;
         private float _currentMovementTilt;
-        
+
+        public Vector3 LookRotation => _lookRotation;
+
         private void Start()
         {
             _inputSystem = ServiceLocator.Get<InputSystem>();
@@ -47,11 +49,12 @@ namespace GamePlay.Player
         
         private void LateUpdate()
         {
-            if (_inputSystem == null || _inputSystem.Snapshot.Context != InputContext.GamePlay)
+            if (_inputSystem == null || _inputSystem.Snapshot.Context != InputContext.GamePlay || !enabled)
                 return;
             
-            float deltaTime = Time.deltaTime;
+            var deltaTime = Time.deltaTime;
             var lookInput = _inputSystem.Snapshot.LookInput;
+            
             CalculateBaseMouseLook(lookInput);
             CalculateCameraBob(deltaTime);
             CalculateMovementTilt(deltaTime);
@@ -76,7 +79,7 @@ namespace GamePlay.Player
 
         private void CalculateCameraBob(float deltaTime)
         {
-            var velocity = _playerMovement.Velocity;
+            var velocity = _playerMovement.HorizontalVelocity;
             var speed = velocity.magnitude;
 
             if (speed < _movementVelocityStopThreshold)
@@ -92,7 +95,7 @@ namespace GamePlay.Player
 
         private void CalculateMovementTilt(float deltaTime)
         {
-            var localVelocity = _orientationTransform.InverseTransformDirection(_playerMovement.Velocity);
+            var localVelocity = _orientationTransform.InverseTransformDirection(_playerMovement.HorizontalVelocity);
             var targetTilt = -localVelocity.x * _movementTiltAmount;
             targetTilt = Mathf.Clamp(targetTilt, -_movementTiltClamp, _movementTiltClamp);
             _currentMovementTilt = Mathf.Lerp(_currentMovementTilt, targetTilt, deltaTime * _movementTiltSmoothness);
