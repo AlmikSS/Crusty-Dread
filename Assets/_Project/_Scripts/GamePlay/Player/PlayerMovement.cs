@@ -1,7 +1,6 @@
 ﻿using Core.Input;
 using Core.ServiceLocatorDI;
 using Core.TicksSystem;
-using TriInspector;
 using UnityEngine;
 
 namespace GamePlay.Player
@@ -11,6 +10,7 @@ namespace GamePlay.Player
     {
         [SerializeField] private Transform _orientationTransform;
         [SerializeField] private float _walkSpeed;
+        [SerializeField] private float _gravityScale; 
         
         private CharacterController _cc;
         private InputSystem _inputSystem;
@@ -38,6 +38,12 @@ namespace GamePlay.Player
             var moveInput = _inputSystem.Snapshot.MoveInput;
             var direction = _orientationTransform.TransformDirection(new Vector3(moveInput.x, 0, moveInput.y));
             _moveDirection = Vector3.Lerp(_moveDirection, direction, deltaTime * _walkSpeed);
+
+            if (_cc.isGrounded)
+                _moveDirection.y = -2f;
+            else
+                _moveDirection.y += _gravityScale * deltaTime;
+            
             _cc.Move(_moveDirection * _walkSpeed * deltaTime);
         }
     }
