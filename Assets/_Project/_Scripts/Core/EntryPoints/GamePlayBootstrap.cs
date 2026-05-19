@@ -1,5 +1,6 @@
 ﻿using Core.Input;
 using Core.TicksSystem;
+using Tools.DevConsole;
 using UnityEngine;
 
 namespace Core.EntryPoints
@@ -13,6 +14,8 @@ namespace Core.EntryPoints
         {
             _tickSystem.Construct();
             _inputSystem.Construct();
+            
+            CommandsRegistry.RegisterAllCommands();
             
             _tickSystem.StartTicks();
         }

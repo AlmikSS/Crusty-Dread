@@ -1,5 +1,4 @@
-﻿using System;
-using Core.ServiceLocatorDI;
+﻿using Core.ServiceLocatorDI;
 using Core.TicksSystem;
 using UnityEngine;
 
@@ -9,8 +8,11 @@ namespace Core.Input
     {
         private InputActions _inputActions;
         private InputSnapshot _snapshot;
-        private bool _isUseInput;
+        private InputContext _context;
+        private bool _useInput;
+        private bool _openConsole;
         private bool _isConstruct;
+        private int _uiOpenedCount;
         
         public TickPhase Phase => TickPhase.InputPhase;
         public InputSnapshot Snapshot => _snapshot;
@@ -23,6 +25,27 @@ namespace Core.Input
             _inputActions.Enable();
             _isConstruct = true;
         }
+
+        public void OpenUI()
+        {
+            _uiOpenedCount++;
+            _context = InputContext.UI;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+
+        public void CloseUI()
+        {
+            _uiOpenedCount--;
+            
+            if (_uiOpenedCount > 0)
+                return;
+
+            _context = InputContext.GamePlay;
+            _uiOpenedCount = 0;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
         
         public void OnTick(float deltaTime)
         {
@@ -30,11 +53,14 @@ namespace Core.Input
             var lookInput = _inputActions.Player.Look.ReadValue<Vector2>();
 
             _snapshot = new InputSnapshot(
+                _context,
                 moveInput,
                 lookInput,
-                _isUseInput);
+                _useInput,
+                _openConsole);
             
-            _isUseInput = false;
+            _useInput = false;
+            _openConsole = false;
         }
 
         private void Update()
@@ -43,7 +69,14 @@ namespace Core.Input
                 return;
             
             if (_inputActions.Player.Interact.WasPressedThisFrame())
-                _isUseInput = true;
+            {
+                _useInput = true;
+            }
+
+            if (_inputActions.Player.OpenConsole.WasPressedThisFrame())
+            {
+                _openConsole = true;
+            }
         }
 
         private void OnDestroy()

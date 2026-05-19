@@ -174,6 +174,15 @@ namespace Core.Input
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""OpenConsole"",
+                    ""type"": ""Button"",
+                    ""id"": ""ab55ca33-78b3-44f9-9cd6-19587c8edc71"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -559,6 +568,17 @@ namespace Core.Input
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""49dd3982-7f6b-4615-a153-f970b4c9c8c8"",
+                    ""path"": ""<Keyboard>/backquote"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""OpenConsole"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1155,6 +1175,7 @@ namespace Core.Input
             m_Player_Previous = m_Player.FindAction("Previous", throwIfNotFound: true);
             m_Player_Next = m_Player.FindAction("Next", throwIfNotFound: true);
             m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
+            m_Player_OpenConsole = m_Player.FindAction("OpenConsole", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1257,6 +1278,7 @@ namespace Core.Input
         private readonly InputAction m_Player_Previous;
         private readonly InputAction m_Player_Next;
         private readonly InputAction m_Player_Sprint;
+        private readonly InputAction m_Player_OpenConsole;
         /// <summary>
         /// Provides access to input actions defined in input action map "Player".
         /// </summary>
@@ -1304,6 +1326,10 @@ namespace Core.Input
             /// Provides access to the underlying input action "Player/Sprint".
             /// </summary>
             public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
+            /// <summary>
+            /// Provides access to the underlying input action "Player/OpenConsole".
+            /// </summary>
+            public InputAction @OpenConsole => m_Wrapper.m_Player_OpenConsole;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -1357,6 +1383,9 @@ namespace Core.Input
                 @Sprint.started += instance.OnSprint;
                 @Sprint.performed += instance.OnSprint;
                 @Sprint.canceled += instance.OnSprint;
+                @OpenConsole.started += instance.OnOpenConsole;
+                @OpenConsole.performed += instance.OnOpenConsole;
+                @OpenConsole.canceled += instance.OnOpenConsole;
             }
 
             /// <summary>
@@ -1395,6 +1424,9 @@ namespace Core.Input
                 @Sprint.started -= instance.OnSprint;
                 @Sprint.performed -= instance.OnSprint;
                 @Sprint.canceled -= instance.OnSprint;
+                @OpenConsole.started -= instance.OnOpenConsole;
+                @OpenConsole.performed -= instance.OnOpenConsole;
+                @OpenConsole.canceled -= instance.OnOpenConsole;
             }
 
             /// <summary>
@@ -1758,6 +1790,13 @@ namespace Core.Input
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnSprint(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "OpenConsole" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnOpenConsole(InputAction.CallbackContext context);
         }
         /// <summary>
         /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

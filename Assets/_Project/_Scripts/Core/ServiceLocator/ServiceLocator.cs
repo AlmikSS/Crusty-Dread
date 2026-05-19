@@ -19,6 +19,7 @@ namespace Core.ServiceLocatorDI
             }
             
             _services[type] = service;
+            Debug.Log($"Registered service {type}");
         }
 
         public static void Unregister<T>(T service) where T : class, IService
@@ -32,6 +33,7 @@ namespace Core.ServiceLocatorDI
             }
             
             _services.Remove(type);
+            Debug.Log($"Unregistered service {type}");
         }
 
         public static T Get<T>() where T : class, IService
@@ -46,6 +48,7 @@ namespace Core.ServiceLocatorDI
         public static void Clear()
         {
             _services.Clear();
+            Debug.Log($"All services cleared");
         }
     }
 }
