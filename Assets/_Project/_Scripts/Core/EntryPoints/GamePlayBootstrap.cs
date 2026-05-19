@@ -2,6 +2,7 @@
 using Core.TicksSystem;
 using Tools.DevConsole;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Core.EntryPoints
 {
@@ -18,6 +19,12 @@ namespace Core.EntryPoints
             CommandsRegistry.RegisterAllCommands();
             
             _tickSystem.StartTicks();
+        }
+
+        [Command("restart", "Reload active scene")]
+        private void Restart()
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 }

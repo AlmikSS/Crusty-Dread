@@ -9,10 +9,12 @@ namespace Core.Input
         private InputActions _inputActions;
         private InputSnapshot _snapshot;
         private InputContext _context;
+        private bool _isConstruct;
         private bool _useInput;
         private bool _openConsole;
-        private bool _isConstruct;
+        private bool _jumpInput;
         private int _uiOpenedCount;
+        
         
         public TickPhase Phase => TickPhase.InputPhase;
         public InputSnapshot Snapshot => _snapshot;
@@ -57,10 +59,12 @@ namespace Core.Input
                 moveInput,
                 lookInput,
                 _useInput,
-                _openConsole);
+                _openConsole,
+                _jumpInput);
             
             _useInput = false;
             _openConsole = false;
+            _jumpInput = false;
         }
 
         private void Update()
@@ -69,14 +73,13 @@ namespace Core.Input
                 return;
             
             if (_inputActions.Player.Interact.WasPressedThisFrame())
-            {
                 _useInput = true;
-            }
 
             if (_inputActions.Player.OpenConsole.WasPressedThisFrame())
-            {
                 _openConsole = true;
-            }
+
+            if (_inputActions.Player.Jump.WasPressedThisFrame())
+                _jumpInput = true;
         }
 
         private void OnDestroy()

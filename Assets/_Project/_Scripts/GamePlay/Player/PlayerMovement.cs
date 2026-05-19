@@ -1,6 +1,7 @@
 ﻿using Core.Input;
 using Core.ServiceLocatorDI;
 using Core.TicksSystem;
+using Tools.DevConsole;
 using UnityEngine;
 
 namespace GamePlay.Player
@@ -12,11 +13,13 @@ namespace GamePlay.Player
         [SerializeField] private float _walkSpeed;
         [SerializeField] private float _acceleration;
         [SerializeField] private float _gravityScale; 
+        [SerializeField] private float _jumpHeight;
         
         private CharacterController _cc;
         private InputSystem _inputSystem;
         private Vector3 _horizontalVelocity;
         private float _verticalVelocity;
+        private bool _jumpsEnabled;
         
         public TickPhase Phase => TickPhase.MainPhase;
         public Vector3 Velocity => _horizontalVelocity;
@@ -38,7 +41,9 @@ namespace GamePlay.Player
             if (_inputSystem == null || _inputSystem.Snapshot.Context != InputContext.GamePlay)
                 return;
 
-            var moveInput = _inputSystem.Snapshot.MoveInput;
+            var snapshot = _inputSystem.Snapshot;
+            
+            var moveInput = snapshot.MoveInput;
             var input = new Vector3(moveInput.x, 0, moveInput.y);
             input = Vector3.ClampMagnitude(input, 1f);
 
@@ -51,8 +56,32 @@ namespace GamePlay.Player
             else
                 _verticalVelocity += _gravityScale * deltaTime;
             
+            if (snapshot.JumpInput)
+                Jump();
+            
             var finalVelocity = _horizontalVelocity + Vector3.up * _verticalVelocity;
             _cc.Move(finalVelocity * deltaTime);
+        }
+
+        private void Jump()
+        {
+            if (!_cc.isGrounded || !_jumpsEnabled)
+                return;
+
+            _verticalVelocity = 0f;
+            _verticalVelocity += _jumpHeight;
+        }
+
+        [Command("jump_enable", "Enable/disable jumps")]
+        private void SetJumpEnable(bool enable)
+        {
+            _jumpsEnabled = enable;
+        }
+
+        [Command("set_player_speed", "Change player speed")]
+        private void SetSpeed(float speed)
+        {
+            _walkSpeed = speed;
         }
     }
 }

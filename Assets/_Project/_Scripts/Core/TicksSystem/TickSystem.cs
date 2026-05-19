@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Core.ServiceLocatorDI;
+using Tools.DevConsole;
+using TriInspector;
 using UnityEngine;
 
 namespace Core.TicksSystem
@@ -22,8 +24,7 @@ namespace Core.TicksSystem
         {
             ServiceLocator.Register(this);
             
-            _tickInterval = 1f / _ticksPerSecond;
-            _accumulator = 0f;
+            SetTickSettings();
 
             foreach (TickPhase phase in Enum.GetValues(typeof(TickPhase)))
             {
@@ -113,6 +114,20 @@ namespace Core.TicksSystem
                 _tickables[phase].Remove(tickable);
                 Debug.Log($"Unregistered tickable {tickable.GetType().Name}");
             }
+        }
+        
+        [Button(ButtonSizes.Medium, "Recalculate ticks")]
+        private void SetTickSettings()
+        {
+            _tickInterval = 1f / _ticksPerSecond;
+            _accumulator = 0f;
+        }
+
+        [Command("change_tickRate", "Changes game tick rate")]
+        private void SetTickRate(int tickRate)
+        {
+            _ticksPerSecond = tickRate;
+            SetTickSettings();
         }
     }
 }

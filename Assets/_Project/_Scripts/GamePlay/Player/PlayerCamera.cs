@@ -1,6 +1,7 @@
 ﻿using Core.Input;
 using Core.ServiceLocatorDI;
 using Core.TicksSystem;
+using Tools.DevConsole;
 using TriInspector;
 using UnityEngine;
 
@@ -103,6 +104,18 @@ namespace GamePlay.Player
             targetTilt = Mathf.Clamp(targetTilt, -_movementTiltClamp, _movementTiltClamp);
             _currentMovementTilt = Mathf.Lerp(_currentMovementTilt, targetTilt, deltaTime * _movementTiltSmoothness);
             _movementTiltRotation = new Vector3(0f, 0f, _currentMovementTilt);
+        }
+
+        [Command("set_camera_sens", "Changes camera sensitivity")]
+        private void SetSensitivity(float sensitivity)
+        {
+            _sensitivity = sensitivity;
+        }
+
+        [Command("set_camera_clamp", "Changes camera X clamp")]
+        private void ChangeCameraClamp(float clamp)
+        {
+            _xRotationClamp = clamp;
         }
     }
 }
