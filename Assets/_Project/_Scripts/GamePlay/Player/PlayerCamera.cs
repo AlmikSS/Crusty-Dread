@@ -110,12 +110,14 @@ namespace GamePlay.Player
         private void SetSensitivity(float sensitivity)
         {
             _sensitivity = sensitivity;
+            Debug.Log("Camera sensitivity changed: " + _sensitivity);
         }
 
         [Command("set_camera_clamp", "Changes camera X clamp")]
         private void ChangeCameraClamp(float clamp)
         {
             _xRotationClamp = clamp;
+            Debug.Log("Camera X clamp changed: " + _xRotationClamp);
         }
     }
 }

@@ -76,12 +76,22 @@ namespace GamePlay.Player
         private void SetJumpEnable(bool enable)
         {
             _jumpsEnabled = enable;
+            var log = enable ? "enabled" : "disabled";
+            Debug.Log("Jump " + log);
+        }
+
+        [Command("set_jump_height", "Change player jump height")]
+        private void SetJumpHeight(float jumpHeight)
+        {
+            _jumpHeight = jumpHeight;
+            Debug.Log("Jump height changed: " + _jumpHeight);
         }
 
         [Command("set_player_speed", "Change player speed")]
         private void SetSpeed(float speed)
         {
             _walkSpeed = speed;
+            Debug.Log("Player speed changed: " + _walkSpeed);
         }
     }
 }

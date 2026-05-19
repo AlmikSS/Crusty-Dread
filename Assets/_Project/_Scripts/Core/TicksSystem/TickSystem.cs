@@ -128,6 +128,7 @@ namespace Core.TicksSystem
         {
             _ticksPerSecond = tickRate;
             SetTickSettings();
+            Debug.Log("Tick rate changed");
         }
     }
 }

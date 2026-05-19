@@ -24,6 +24,7 @@ namespace Core.EntryPoints
         [Command("restart", "Reload active scene")]
         private void Restart()
         {
+            Debug.Log("Restart");
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
