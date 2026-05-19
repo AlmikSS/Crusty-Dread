@@ -1151,6 +1151,8 @@ MonoBehaviour:
   _walkSpeed: 8
   _acceleration: 6
   _gravityScale: -9.81
+  _jumpHeight: 4
+  _jumpsEnabled: 0
 --- !u!143 &311540354
 CharacterController:
   m_ObjectHideFlags: 0

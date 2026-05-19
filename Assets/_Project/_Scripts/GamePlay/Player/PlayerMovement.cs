@@ -14,12 +14,12 @@ namespace GamePlay.Player
         [SerializeField] private float _acceleration;
         [SerializeField] private float _gravityScale; 
         [SerializeField] private float _jumpHeight;
+        [SerializeField] private bool _jumpsEnabled;
         
         private CharacterController _cc;
         private InputSystem _inputSystem;
         private Vector3 _horizontalVelocity;
         private float _verticalVelocity;
-        private bool _jumpsEnabled;
         
         public TickPhase Phase => TickPhase.MainPhase;
         public Vector3 Velocity => _horizontalVelocity;
@@ -72,7 +72,7 @@ namespace GamePlay.Player
             _verticalVelocity += _jumpHeight;
         }
 
-        [Command("jump_enable", "Enable/disable jumps")]
+        [Command("set_jump_enable", "Enable/disable jumps")]
         private void SetJumpEnable(bool enable)
         {
             _jumpsEnabled = enable;
@@ -92,6 +92,13 @@ namespace GamePlay.Player
         {
             _walkSpeed = speed;
             Debug.Log("Player speed changed: " + _walkSpeed);
+        }
+
+        [Command("set_player_gravity", "Change player gravity scale")]
+        private void SetPlayerGravity(float gravity)
+        {
+            _gravityScale = gravity;
+            Debug.Log("Player gravity changed: " + _gravityScale);
         }
     }
 }
