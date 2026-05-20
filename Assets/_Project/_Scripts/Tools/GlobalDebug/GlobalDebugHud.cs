@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using Core.Input;
 using Core.ServiceLocatorDI;
 using Core.TicksSystem;
