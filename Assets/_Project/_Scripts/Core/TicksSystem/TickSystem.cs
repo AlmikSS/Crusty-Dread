@@ -109,6 +109,11 @@ namespace Core.TicksSystem
             ReleaseRegisterQueue();
             ReleaseUnregisterQueue();
         }
+        
+        private void OnDestroy()
+        {
+            ServiceLocator.Unregister(this);
+        }
 
         private void ReleaseRegisterQueue()
         {

@@ -88,6 +88,7 @@ namespace Core.Input
             _isConstruct = false;
             _inputActions.Disable();
             ServiceLocator.Get<TickSystem>().Unregister(this);
+            ServiceLocator.Unregister(this);
         }
     }
 }
