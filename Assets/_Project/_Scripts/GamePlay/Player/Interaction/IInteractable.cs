@@ -6,6 +6,6 @@ namespace GamePlay.Player
     {
         bool HasHint { get; }
         Sprite HintSprite { get; }
-        void Interact();
+        void Interact(GameObject interactor);
     }
 }

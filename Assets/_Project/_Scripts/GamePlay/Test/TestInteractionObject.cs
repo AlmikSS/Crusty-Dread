@@ -11,7 +11,7 @@ namespace GamePlay.Test
         public bool HasHint => _hasHint;
         public Sprite HintSprite => _hintSprite;
         
-        public void Interact()
+        public void Interact(GameObject interactor)
         {
             Debug.Log("Interact with " + gameObject.name);
         }

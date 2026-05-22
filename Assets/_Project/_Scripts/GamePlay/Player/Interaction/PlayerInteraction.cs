@@ -49,7 +49,7 @@ namespace GamePlay.Player
                 ResetHint();
             
             if (_inputSystem.Snapshot.UseInput)
-                interactable.Interact();
+                interactable.Interact(gameObject);
         }
 
         private void ResetHint()
