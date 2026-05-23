@@ -1,4 +1,5 @@
-﻿using Core.Input;
+﻿using Core.Audio;
+using Core.Input;
 using Core.TicksSystem;
 using Tools.DevConsole;
 using UnityEngine;
@@ -10,14 +11,15 @@ namespace Core.EntryPoints
     {
         [SerializeField] private TickSystem _tickSystem;
         [SerializeField] private InputSystem _inputSystem;
+        [SerializeField] private AudioSystem _audioSystem;
         
         private void Awake()
         {
             _tickSystem.Construct();
             _inputSystem.Construct();
+            _audioSystem.Construct();
             
             CommandsRegistry.RegisterAllCommands();
-            
             _tickSystem.StartTicks();
         }
 

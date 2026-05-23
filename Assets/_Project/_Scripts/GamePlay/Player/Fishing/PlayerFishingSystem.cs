@@ -1,13 +1,14 @@
 ﻿using Core.Input;
 using Core.ServiceLocatorDI;
 using Core.TicksSystem;
+using GamePlay.Props;
 using UnityEngine;
 
 namespace GamePlay.Player
 {
     public class PlayerFishingSystem : MonoBehaviour, ITickable
     {
-        [SerializeField] private GameObject _fishingRod;
+        [SerializeField] private FishingRod _fishingRod;
 
         private InputSystem _inputSystem;
         private bool _isFishingRodInHands;
@@ -29,7 +30,7 @@ namespace GamePlay.Player
         public void FishingRod()
         {
             _isFishingRodInHands = !_isFishingRodInHands;
-            _fishingRod.SetActive(_isFishingRodInHands);
+            _fishingRod.gameObject.SetActive(_isFishingRodInHands);
         }
         
         public void OnTick(float deltaTime)
@@ -39,7 +40,7 @@ namespace GamePlay.Player
 
             if (_isFishingRodInHands && _inputSystem.Snapshot.UseInput)
             {
-                Debug.Log("Fishing");
+                _fishingRod.Release();
             }
         }
 

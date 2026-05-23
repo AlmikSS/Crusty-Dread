@@ -1,6 +1,4 @@
-﻿using Core.ServiceLocatorDI;
-using Core.TicksSystem;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace GamePlay.Props
 {

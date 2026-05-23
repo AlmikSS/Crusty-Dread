@@ -2,7 +2,7 @@
 
 namespace GamePlay.Player
 {
-    public class FishingRoadPlaceInteractable : MonoBehaviour, IInteractable
+    public class FishingRodPlaceInteractable : MonoBehaviour, IInteractable
     {
         [SerializeField] private bool _hasHint;
         [SerializeField] private Sprite _hintSprite;
