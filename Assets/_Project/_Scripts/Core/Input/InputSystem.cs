@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Core.Input
 {
-    public class InputSystem : MonoBehaviour, ITickable, IService
+    public sealed class InputSystem : MonoBehaviour, ITickable, IService
     {
         private InputActions _inputActions;
         private InputSnapshot _snapshot;

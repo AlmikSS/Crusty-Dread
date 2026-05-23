@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using Core.Audio;
+using Core.EventSystem;
 using Core.ServiceLocatorDI;
 using TriInspector;
 using UnityEngine;
@@ -12,6 +13,7 @@ namespace GamePlay.Props
         [SerializeField, MinMaxSlider(1, 15f)] private Vector2 _timeBeforeBite;
         [SerializeField] private float _timeToCatch;
 
+        private EventBus _eventBus;
         private AudioSystem _audioSystem;
         private AudioSource _currentAudioSource;
         private Coroutine _heartbeatCoroutine;
@@ -21,39 +23,47 @@ namespace GamePlay.Props
         private void Start()
         {
             _audioSystem = ServiceLocator.Get<AudioSystem>();
+            _eventBus = ServiceLocator.Get<EventBus>();
         }
         
         public void Release()
         {
             if (_isFishing)
             {
-                if (_isFishOnHook)
-                {
-                    Debug.Log("YOOOO!!");
-                    _isFishOnHook = false;
-                }
-                
-                if (_heartbeatCoroutine != null)
-                    StopCoroutine(_heartbeatCoroutine);
-                
-                if (_currentAudioSource != null)
-                {
-                    _currentAudioSource.Stop();
-                    _currentAudioSource = null;
-                }
-                
-                _heartbeatCoroutine = null;
-                _isFishing = false;
+                StopFishing();
                 return;
             }
 
             _heartbeatCoroutine = StartCoroutine(HeartbeatCoroutine());
         }
 
+        public void StopFishing()
+        {
+            if (_isFishOnHook)
+            {
+                Debug.Log("YOOOO!!");
+                _isFishOnHook = false;
+            }
+            
+            if (_heartbeatCoroutine != null)
+                StopCoroutine(_heartbeatCoroutine);
+                
+            if (_currentAudioSource != null)
+            {
+                _currentAudioSource.Stop();
+                _currentAudioSource = null;
+            }
+                
+            _heartbeatCoroutine = null;
+            _isFishing = false;
+            _eventBus.Publish(new FishingEvent(_isFishing));
+        }
+
         private IEnumerator HeartbeatCoroutine()
         {
             _isFishing = true;
             _currentAudioSource = _audioSystem.Play(_heartbeatAudioEvent, transform.position, true);
+            _eventBus.Publish(new FishingEvent(_isFishing));
             
             var time = Random.Range(_timeBeforeBite.x, _timeBeforeBite.y);
             var elapsed = 0f;

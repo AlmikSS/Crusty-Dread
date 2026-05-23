@@ -14,12 +14,12 @@ namespace Core.ServiceLocatorDI
             
             if (_services.ContainsKey(type))
             {
-                Debug.LogWarning("Try to register existing service");
+                Debug.LogWarning("[ServiceLocator] Try to register existing service");
                 return;
             }
             
             _services[type] = service;
-            Debug.Log($"Registered service {type}");
+            Debug.Log($"[ServiceLocator] Registered service {type}");
         }
 
         public static void Unregister<T>(T service) where T : class, IService
@@ -28,12 +28,12 @@ namespace Core.ServiceLocatorDI
             
             if (!_services.ContainsKey(type))
             {
-                Debug.LogWarning("Try to unregister non existing service");
+                Debug.LogWarning("[ServiceLocator] Try to unregister non existing service");
                 return;
             }
             
             _services.Remove(type);
-            Debug.Log($"Unregistered service {type}");
+            Debug.Log($"[ServiceLocator] Unregistered service {type}");
         }
 
         public static T Get<T>() where T : class, IService
@@ -41,14 +41,14 @@ namespace Core.ServiceLocatorDI
             if (_services.TryGetValue(typeof(T), out var service))
                 return (T)service;
             
-            Debug.LogWarning("Try to get non existing service");
+            Debug.LogWarning("[ServiceLocator] Try to get non existing service");
             return null;
         }
 
         public static void Clear()
         {
             _services.Clear();
-            Debug.Log($"All services cleared");
+            Debug.Log($"[ServiceLocator] All services cleared");
         }
     }
 }

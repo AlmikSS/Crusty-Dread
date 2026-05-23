@@ -9,7 +9,7 @@ using Debug = UnityEngine.Debug;
 
 namespace Core.TicksSystem
 {
-    public class TickSystem : MonoBehaviour, IService
+    public sealed class TickSystem : MonoBehaviour, IService
     {
         [SerializeField] private int _ticksPerSecond = 60;
 
@@ -49,13 +49,13 @@ namespace Core.TicksSystem
                 return;
 
             _isTicksStarted = true;
-            Debug.Log("Ticks started");
+            Debug.Log("[TickSystem] Ticks started");
         }
         
         public void StopTicks()
         {
             _isTicksStarted = false;
-            Debug.Log("Ticks stopped");
+            Debug.Log("[TickSystem] Ticks stopped");
         }
         
         public void Register(ITickable tickable) => _registerQueue.Enqueue(tickable);
@@ -126,7 +126,7 @@ namespace Core.TicksSystem
                     continue;
                 
                 _tickables[phase].Add(newTickable);
-                Debug.Log($"Registered tickable {newTickable.GetType().Name}");
+                Debug.Log($"[TickSystem] Registered tickable {newTickable.GetType().Name}");
             }
         }
 
@@ -141,7 +141,7 @@ namespace Core.TicksSystem
                     continue;
                 
                 _tickables[phase].Remove(tickable);
-                Debug.Log($"Unregistered tickable {tickable.GetType().Name}");
+                Debug.Log($"[TickSystem] Unregistered tickable {tickable.GetType().Name}");
             }
         }
         

@@ -38,7 +38,11 @@ namespace GamePlay.Player
             if (!_inFishZone)
                 return;
 
-            if (_isFishingRodInHands && _inputSystem.Snapshot.UseInput)
+            var snapshot = _inputSystem.Snapshot;
+            if (snapshot.Context != InputContext.GamePlay)
+                return;
+
+            if (_isFishingRodInHands && snapshot.UseInput)
             {
                 _fishingRod.Release();
             }
@@ -53,7 +57,10 @@ namespace GamePlay.Player
         private void OnTriggerExit(Collider other)
         {
             if (other.CompareTag("FishingZone"))
+            {
                 _inFishZone = false;
+                _fishingRod.StopFishing();
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Core.Audio;
+using Core.EventSystem;
 using Core.Input;
 using Core.TicksSystem;
 using Tools.DevConsole;
@@ -13,21 +14,22 @@ namespace Core.EntryPoints
         [SerializeField] private InputSystem _inputSystem;
         [SerializeField] private AudioSystem _audioSystem;
         
+        private EventBus _eventBus;
+        
         private void Awake()
         {
             _tickSystem.Construct();
             _inputSystem.Construct();
             _audioSystem.Construct();
+            _eventBus = new EventBus();
             
             CommandsRegistry.RegisterAllCommands();
             _tickSystem.StartTicks();
         }
 
-        [Command("restart", "Reload active scene")]
-        private void Restart()
+        private void OnDestroy()
         {
-            Debug.Log("Restart");
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            _eventBus.Dispose();
         }
 
         [Command("enable_debug_mode", "Enable global debug hud with input and player input, jump")]

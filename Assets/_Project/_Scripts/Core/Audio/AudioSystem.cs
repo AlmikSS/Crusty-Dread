@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 
 namespace Core.Audio
 {
-    public class AudioSystem : MonoBehaviour, IService
+    public sealed class AudioSystem : MonoBehaviour, IService
     {
         [SerializeField] private int _audioSourcePoolAmount;
         [SerializeField] private AudioMixerGroup _sfxAudioMixerGroup;
