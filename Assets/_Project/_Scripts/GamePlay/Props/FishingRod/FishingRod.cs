@@ -10,7 +10,7 @@ namespace GamePlay.Props
     public class FishingRod : MonoBehaviour
     {
         [SerializeField] private AudioEvent _heartbeatAudioEvent;
-        [SerializeField, MinMaxSlider(1, 15f)] private Vector2 _timeBeforeBite;
+        [SerializeField, MinMaxSlider(1, 120f)] private Vector2 _timeBeforeBite;
         [SerializeField] private float _timeToCatch;
 
         private EventBus _eventBus;
@@ -19,6 +19,10 @@ namespace GamePlay.Props
         private Coroutine _heartbeatCoroutine;
         private bool _isFishing;
         private bool _isFishOnHook;
+
+        public bool IsFishing => _isFishing;
+        public bool IsFishOnHook => _isFishOnHook;
+        public float TimeBeforeBite { get; private set; } = -1f;
 
         private void Start()
         {
@@ -39,9 +43,12 @@ namespace GamePlay.Props
 
         public void StopFishing()
         {
+            if (!_isFishing)
+                return;
+            
             if (_isFishOnHook)
             {
-                Debug.Log("YOOOO!!");
+                _eventBus.Publish(new FishingSuccessEvent());
                 _isFishOnHook = false;
             }
             
@@ -56,14 +63,14 @@ namespace GamePlay.Props
                 
             _heartbeatCoroutine = null;
             _isFishing = false;
-            _eventBus.Publish(new FishingEvent(_isFishing));
+            _eventBus.Publish(new FishingEndedEvent());
         }
 
         private IEnumerator HeartbeatCoroutine()
         {
             _isFishing = true;
             _currentAudioSource = _audioSystem.Play(_heartbeatAudioEvent, transform.position, true);
-            _eventBus.Publish(new FishingEvent(_isFishing));
+            _eventBus.Publish(new FishingStartedEvent());
             
             var time = Random.Range(_timeBeforeBite.x, _timeBeforeBite.y);
             var elapsed = 0f;
@@ -71,11 +78,13 @@ namespace GamePlay.Props
 
             while (elapsed < time)
             {
+                TimeBeforeBite = time - elapsed;
                 elapsed += Time.deltaTime;
                 _currentAudioSource.volume = Mathf.Lerp(startVolume, 0f, elapsed / time);
                 yield return null;
             }
-            
+
+            TimeBeforeBite = -1f;
             _currentAudioSource.volume = 0f;
             _currentAudioSource.Stop();
             _isFishOnHook = true;
@@ -83,7 +92,7 @@ namespace GamePlay.Props
             yield return new WaitForSeconds(_timeToCatch);
             
             if (_isFishOnHook)
-                Debug.Log("Ohhh");
+                _eventBus.Publish(new FishingFailedEvent());
             
             _isFishOnHook = false;
             _isFishing = false;

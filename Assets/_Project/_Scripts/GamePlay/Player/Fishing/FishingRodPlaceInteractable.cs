@@ -18,7 +18,7 @@ namespace GamePlay.Player
                 return;
             }
             
-            playerFishingSystem.FishingRod();
+            playerFishingSystem.PickFishingRod();
         }
     }
 }

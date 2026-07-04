@@ -13,6 +13,10 @@ namespace GamePlay.Player
         private InputSystem _inputSystem;
         private bool _isFishingRodInHands;
         private bool _inFishZone;
+
+        public bool IsFishingRodInHands => _isFishingRodInHands;
+        public bool InFishZone => _inFishZone;
+        public FishingRod FishingRod => _fishingRod;
         
         public TickPhase Phase => TickPhase.MainPhase;
 
@@ -27,7 +31,7 @@ namespace GamePlay.Player
             ServiceLocator.Get<TickSystem>().Unregister(this);
         }
 
-        public void FishingRod()
+        public void PickFishingRod()
         {
             _isFishingRodInHands = !_isFishingRodInHands;
             _fishingRod.gameObject.SetActive(_isFishingRodInHands);

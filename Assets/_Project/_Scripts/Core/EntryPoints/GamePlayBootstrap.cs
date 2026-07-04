@@ -1,7 +1,9 @@
 ﻿using Core.Audio;
+using Core.DaysCycle;
 using Core.EventSystem;
 using Core.Input;
 using Core.TicksSystem;
+using GamePlay.Tools;
 using Tools.DevConsole;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -13,15 +15,20 @@ namespace Core.EntryPoints
         [SerializeField] private TickSystem _tickSystem;
         [SerializeField] private InputSystem _inputSystem;
         [SerializeField] private AudioSystem _audioSystem;
+        [SerializeField] private DaysSystem _daysSystem;
+        [SerializeField] private UIPopupShower _uiPopupShower;
         
         private EventBus _eventBus;
         
         private void Awake()
         {
+            _eventBus = new EventBus();
+            
             _tickSystem.Construct();
             _inputSystem.Construct();
             _audioSystem.Construct();
-            _eventBus = new EventBus();
+            _uiPopupShower.Construct();
+            _daysSystem.Construct();
             
             CommandsRegistry.RegisterAllCommands();
             _tickSystem.StartTicks();

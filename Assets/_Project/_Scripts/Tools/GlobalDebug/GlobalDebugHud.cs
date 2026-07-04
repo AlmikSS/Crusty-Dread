@@ -20,6 +20,7 @@ namespace Tools.GlobalDebug
         private Transform _playerTransform;
         private PlayerMovement _playerMovement;
         private PlayerCamera _playerCamera;
+        private PlayerFishingSystem _playerFishingSystem;
         private bool _showPlayerInfo;
         private bool _showInputInfo;
         
@@ -40,6 +41,7 @@ namespace Tools.GlobalDebug
             {
                 _playerMovement = _playerTransform.GetComponent<PlayerMovement>();
                 _playerCamera = _playerTransform.GetComponent<PlayerCamera>();
+                _playerFishingSystem = _playerTransform.GetComponent<PlayerFishingSystem>();
             }
 
             if (_panelRoot != null)
@@ -125,12 +127,21 @@ namespace Tools.GlobalDebug
                 else
                 {
                     var position = _playerTransform.position;
+                    
+                    _sb.AppendLine("<color=blue>-- MOVEMENT --</color>");
                     _sb.AppendLine($"Position: [X: {position.x:F3}, Y: {position.y:F3}, Z: {position.z:F3}]");
                     _sb.AppendLine($"Look rotation: [X: {_playerCamera.LookRotation.x:F3}, Y: {_playerCamera.LookRotation.y:F3}]");
                     _sb.AppendLine($"Horizontal velocity: [X: {_playerMovement.HorizontalVelocity.x:F3}, Z: {_playerMovement.HorizontalVelocity.z:F3}]");
                     _sb.AppendLine($"Vertical velocity: {_playerMovement.VerticalVelocity:F3}");
                     _sb.AppendLine($"IsGrounded: {_playerMovement.IsGrounded}");
                     _sb.AppendLine($"JumpEnabled: {_playerMovement.JumpsEnabled}");
+                    
+                    _sb.AppendLine("<color=blue>-- FISHING --</color>");
+                    _sb.AppendLine($"InFishZone: {_playerFishingSystem.InFishZone}");
+                    _sb.AppendLine($"IsFishingRodInHands: {_playerFishingSystem.IsFishingRodInHands}");
+                    _sb.AppendLine($"IsFishing: {_playerFishingSystem.FishingRod.IsFishing}");
+                    _sb.AppendLine($"IsFishOnHook: {_playerFishingSystem.FishingRod.IsFishOnHook}");
+                    _sb.AppendLine($"TimeBeforeBite: {_playerFishingSystem.FishingRod.TimeBeforeBite}");
                 }
                 _sb.AppendLine();
             }

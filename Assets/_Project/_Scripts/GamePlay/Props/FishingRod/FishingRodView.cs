@@ -23,23 +23,17 @@ namespace GamePlay.Props
         private void Start()
         {
             _eventBus = ServiceLocator.Get<EventBus>();
-            _eventBus.Register<FishingEvent>(OnFishing);
+            _eventBus.Register<FishingStartedEvent>(StartFishing);
+            _eventBus.Register<FishingEndedEvent>(EndFishing);
         }
 
         private void OnDestroy()
         {
-            _eventBus.Unregister<FishingEvent>(OnFishing);
+            _eventBus.Unregister<FishingStartedEvent>(StartFishing);
+            _eventBus.Unregister<FishingEndedEvent>(EndFishing);
         }
 
-        private void OnFishing(FishingEvent fishingEvent)
-        {
-            if (fishingEvent.IsStarted)
-                StartFishing();
-            else
-                EndFishing();
-        }
-
-        private void StartFishing()
+        private void StartFishing(FishingStartedEvent _)
         {
             _animator.SetTrigger(_startFishingTrigger);
             _hookRigidbody.isKinematic = true;
@@ -47,7 +41,7 @@ namespace GamePlay.Props
             _hookRigidbody.transform.position = _onFishingHookOrigin.position;
         }
 
-        private void EndFishing()
+        private void EndFishing(FishingEndedEvent _)
         {
             _animator.SetTrigger(_endFishingTrigger);
             _hookRigidbody.isKinematic = false;
